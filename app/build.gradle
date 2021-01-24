@@ -48,6 +48,7 @@ android {
 
 ext {
     retrofitVersion = '2.6.0'
+    mockk_version = '1.10.0'
 }
 
 dependencies {
@@ -81,6 +82,9 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
 
     testImplementation 'junit:junit:4.12'
+    testImplementation "io.mockk:mockk:$mockk_version"
+    testImplementation "android.arch.core:core-testing:1.1.1"
+
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 

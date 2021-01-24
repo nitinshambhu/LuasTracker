@@ -45,13 +45,12 @@ class ForecastFragment : Fragment() {
             ) as Animation
         )
 
-//        viewModel.latestForcecastMessage.observe(viewLifecycleOwner) { binding.message.text = it }
         viewModel.latestForcecastTrams.observe(viewLifecycleOwner) { tramsListAdapter.changeList(it) }
 
         /**
          *  We could have a check like this to avoid fetching the info every time the fragment
          *  gets recreated. However, this being an app that tracks realtime info, I chose not to have
-         *  condition like this or verifying Bundle data
+         *  condition like this or verifying Bundle data from onSaveInstanceState()
          */
         /*if (viewModel.latestForcecastTrams.value != null) {
             viewModel.displayForecast()
@@ -64,8 +63,9 @@ class ForecastFragment : Fragment() {
         super.onSaveInstanceState(outState)
         /**
          * TODO: Any important info that should survive configuration change or android killing app
-         * due to memory constraints. This app being the one that deals with real time info, I see
-         * no point is saving old data here. It does not even serve the purpose of a good user experience
+         * due to memory constraints can be saved here.
+         * This app being the one that deals with real time info, I see no point is saving old data here.
+         * It does not even serve the purpose of a good user experience
          */
     }
 

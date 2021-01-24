@@ -5,12 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.luas.tracker.common.BaseViewModel
 import com.luas.tracker.common.util.Constants
+import com.luas.tracker.common.util.DateTimeHelper
 import com.luas.tracker.common.util.LoadingState
 import com.luas.tracker.common.util.applySingleSchedulers
-import com.luas.tracker.common.util.firstHalfOfTheDay
 import com.luas.tracker.forecast.data.*
 
-class ForecastViewModel @ViewModelInject constructor(private val repo: ForecastRepository) :
+class ForecastViewModel @ViewModelInject constructor(
+    private val repo: ForecastRepository,
+    private val dateTimeHelper: DateTimeHelper
+) :
     BaseViewModel() {
 
     var uiState = ForecastDataUiState()
@@ -23,7 +26,8 @@ class ForecastViewModel @ViewModelInject constructor(private val repo: ForecastR
     val latestForcecastTrams: LiveData<MutableList<Tram>> = _fetchLatestForecastTrams
 
     fun fetchForecast() {
-        val stop = if (firstHalfOfTheDay()) Constants.Marlborough else Constants.Stillorgan
+        val stop =
+            if (dateTimeHelper.firstHalfOfTheDay()) Constants.Marlborough else Constants.Stillorgan
         addDisposable(
             repo.getForecast(stop = stop)
                 .applySingleSchedulers()
@@ -55,9 +59,10 @@ class ForecastViewModel @ViewModelInject constructor(private val repo: ForecastR
         stopInfoMessage.value = "From ${stopInfo.stop.toUpperCase()} - ${intendedDirection()}"
     }
 
-    fun intendedDirection() = if (firstHalfOfTheDay()) Constants.Outbound else Constants.Inbound
+    fun intendedDirection() =
+        if (dateTimeHelper.firstHalfOfTheDay()) Constants.Outbound else Constants.Inbound
 
-    fun updateUiState(state : LoadingState) {
+    fun updateUiState(state: LoadingState) {
         uiState.apply {
             showList = state.showInfo
             showErrorState = state.showError
