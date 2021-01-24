@@ -1,9 +1,8 @@
 package com.luas.tracker.forecast.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.luas.tracker.common.util.Constants
-import com.luas.tracker.common.util.DateTimeHelper
-import com.luas.tracker.common.util.LoadingState
+import com.luas.tracker.common.CoroutineTestRule
+import com.luas.tracker.common.util.*
 import com.luas.tracker.forecast.data.Direction
 import com.luas.tracker.forecast.data.ForecastRepository
 import com.luas.tracker.forecast.data.StopInfo
@@ -13,6 +12,7 @@ import io.reactivex.rxjava3.android.plugins.RxAndroidPlugins
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Rule
@@ -22,6 +22,9 @@ class ForecastViewModelTest {
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    var coroutineTestRule = CoroutineTestRule()
 
     val repo: ForecastRepository = mockk()
     val dateTimeHelper: DateTimeHelper = mockk()
@@ -170,5 +173,47 @@ class ForecastViewModelTest {
         }
 
         verify(exactly = 0) { viewModel.emitMessages(any()) }
+    }
+
+    @Test
+    fun `Handle success when fetchForecastViaCoroutines method returns successfully`() {
+        val stopInfo: StopInfo = mockk()
+        val directions: MutableList<Direction> = mockk()
+        every { stopInfo.directions } returns directions
+        coEvery { repo.getForecastViaCoroutines(any()) } returns stopInfo.asSuccess()
+        every { dateTimeHelper.firstHalfOfTheDay() } returns true
+        every { viewModel.emitMessages(stopInfo) } just Runs
+        every { viewModel.handleTramForecastInfo(any()) } just Runs
+
+        runBlockingTest {
+
+            viewModel.fetchForecastViaCoroutines()
+
+            coVerifyOrder {
+                repo.getForecastViaCoroutines(Constants.Marlborough)
+                viewModel.emitMessages(stopInfo)
+                viewModel.handleTramForecastInfo(directions)
+            }
+        }
+    }
+
+    @Test
+    fun `Handle Error when fetchForecastViaCoroutines method returns an error`() {
+        val throwable: Throwable = mockk()
+        coEvery { repo.getForecastViaCoroutines(any()) } returns throwable.asError()
+        every { dateTimeHelper.firstHalfOfTheDay() } returns false
+        every { throwable.printStackTrace() } just Runs
+
+        runBlockingTest {
+
+            viewModel.fetchForecastViaCoroutines()
+
+            coVerifyOrder {
+                repo.getForecastViaCoroutines(Constants.Stillorgan)
+                viewModel.handleForecastError(throwable)
+                viewModel.updateUiState(LoadingState.Error)
+                throwable.printStackTrace()
+            }
+        }
     }
 }

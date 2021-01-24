@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
@@ -56,7 +57,12 @@ class ForecastFragment : Fragment() {
             viewModel.displayForecast()
         }*/
 
-        viewModel.fetchForecast()
+        if (resources.getBoolean(R.bool.useCoroutines)) {
+            viewModel.fetchForecastViaCoroutines()
+            Toast.makeText(requireContext(), "Using Coroutines", Toast.LENGTH_SHORT).show()
+        } else {
+            viewModel.fetchForecast()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -76,7 +82,13 @@ class ForecastFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.refresh) {
-            viewModel.refresh()
+            if (resources.getBoolean(R.bool.useCoroutines)) {
+                viewModel.refreshViaCoroutines()
+                Toast.makeText(requireContext(), "Using Coroutines", Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.refresh()
+            }
+
         }
         return super.onOptionsItemSelected(item)
     }

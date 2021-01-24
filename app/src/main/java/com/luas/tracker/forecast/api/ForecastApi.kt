@@ -13,4 +13,11 @@ interface ForecastApi {
         @Query("encrypt") encrypt: Boolean = false,
         @Query("stop") stop: String
     ): Single<StopInfo>
+
+    @GET("/xml/get.ashx")
+    suspend fun getForecastViaCoroutines(
+        @Query("action") action: String = "forecast",
+        @Query("encrypt") encrypt: Boolean = false,
+        @Query("stop") stop: String
+    ): StopInfo
 }

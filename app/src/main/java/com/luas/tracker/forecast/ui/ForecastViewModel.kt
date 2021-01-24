@@ -3,12 +3,11 @@ package com.luas.tracker.forecast.ui
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.luas.tracker.common.BaseViewModel
-import com.luas.tracker.common.util.Constants
-import com.luas.tracker.common.util.DateTimeHelper
-import com.luas.tracker.common.util.LoadingState
-import com.luas.tracker.common.util.applySingleSchedulers
+import com.luas.tracker.common.util.*
 import com.luas.tracker.forecast.data.*
+import kotlinx.coroutines.launch
 
 class ForecastViewModel @ViewModelInject constructor(
     private val repo: ForecastRepository,
@@ -67,5 +66,28 @@ class ForecastViewModel @ViewModelInject constructor(
             showList = state.showInfo
             showErrorState = state.showError
         }
+    }
+
+    // Fetch info using Coroutines
+    fun fetchForecastViaCoroutines() {
+        viewModelScope.launch {
+
+            val stop =
+                if (dateTimeHelper.firstHalfOfTheDay()) Constants.Marlborough else Constants.Stillorgan
+
+            apiResponseHandler(
+                status = repo.getForecastViaCoroutines(stop = stop),
+                onSuccess = { stopInfo ->
+                    emitMessages(stopInfo)
+                    handleTramForecastInfo(stopInfo.directions)
+                },
+                onError = { handleForecastError(it) }
+            )
+        }
+    }
+
+    fun refreshViaCoroutines() {
+        updateUiState(LoadingState.InProgress)
+        fetchForecastViaCoroutines()
     }
 }
