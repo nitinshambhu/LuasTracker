@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="icon_250_dp">250dp</dimen>
+    <dimen name="margin_standard">8dp</dimen>
+    <dimen name="margin_standard_2x">16dp</dimen>
+    <dimen name="margin_standard_3x">24dp</dimen>
+    <dimen name="margin_standard_4x">32dp</dimen>
+
+
+    <dimen name="text_normal">12sp</dimen>
+    <dimen name="text_normal_plus_4">16sp</dimen>
+    <dimen name="text_normal_plus_8">20sp</dimen>
+    <dimen name="text_normal_plus_20">24sp</dimen>
+</resources>

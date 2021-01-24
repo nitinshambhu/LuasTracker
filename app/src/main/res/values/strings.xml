@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">LuasTracker</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="base_url">https://luasforecasts.rpa.ie</string>
+    <string name="minutes">Minutes</string>
+    <string name="destination">Destination</string>
+    <string name="internet_error_message">Apologies ! We are unable to fetch information due to some issue</string>
+    <string name="refresh">Refresh</string>
+</resources>

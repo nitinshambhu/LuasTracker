@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.luas.tracker.forecast.ui.ForecastViewModel" />
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/margin_standard_2x"
+            android:visibility="@{viewModel.uiState.listVisibility}"
+            tools:context=".forecast.ui.fragment.ForecastFragment"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/stopInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.stopInfoMessage}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_normal_plus_8"
+                android:layout_marginTop="@dimen/margin_standard_2x"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/space"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_standard_4x"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/stopInfo" />
+
+            <TextView
+                android:id="@+id/destination"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:background="@color/black"
+                android:gravity="center"
+                android:padding="@dimen/margin_standard"
+                android:text="@string/destination"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_normal_plus_4"
+                app:layout_constraintEnd_toStartOf="@id/minutes"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/space"
+                tools:text="@string/destination" />
+
+            <TextView
+                android:id="@+id/minutes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:background="@color/black"
+                android:gravity="center"
+                android:padding="@dimen/margin_standard"
+                android:text="@string/minutes"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_normal_plus_4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/destination"
+                app:layout_constraintTop_toBottomOf="@id/space"
+                tools:text="@string/minutes" />
+
+
+            <ListView
+                android:id="@+id/tramsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/minutes" />
+
+            <TextView
+                android:id="@+id/message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_standard_2x"
+                android:text="@{viewModel.generalStatusMessage}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_normal_plus_4"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tramsList" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Error state -->
+        <!--      <include
+                  layout="@layout/layout_error_state"
+                  android:visibility="@{viewModel.uiState.errorStateVisibility}"
+                  tools:visibility="gone" />-->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.uiState.errorStateVisibility}"
+            tools:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/no_internet_icon"
+                android:layout_width="@dimen/icon_250_dp"
+                android:layout_height="@dimen/icon_250_dp"
+                android:layout_marginTop="@dimen/margin_standard_4x"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_no_internet" />
+
+            <TextView
+                android:layout_width="@dimen/icon_250_dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_standard_4x"
+                android:text="@string/internet_error_message"
+                android:textSize="@dimen/text_normal_plus_8"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/no_internet_icon" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- progress bar -->
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="@{viewModel.uiState.progressBarVisibility}"
+            tools:visibility="visible" />
+    </FrameLayout>
+</layout>
