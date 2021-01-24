@@ -30,10 +30,7 @@ data class Direction @JvmOverloads constructor(
     var name: String = "",
     @field: ElementList(inline = true, required = false)
     var trams: MutableList<Tram> = mutableListOf()
-) {
-    val isInbound: Boolean
-        get() = "Inbound".equals(name, ignoreCase = true)
-}
+)
 
 @Root(name = "tram", strict = false)
 data class Tram @JvmOverloads constructor(
